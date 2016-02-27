@@ -8,6 +8,10 @@ package controller;
 import entidade.Usuario;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -34,38 +38,65 @@ public class UsuarioController extends HttpServlet {
     }
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-       
-      String nome = req.getParameter("nome");
-      String login = req.getParameter("login");
-      String senha = req.getParameter("senha");
       
+      String acao = req.getParameter("acao");
+      
+      if(acao.equals("exc")){
+      
+      String id = req.getParameter("id");
       Usuario usu = new Usuario();
-      usu.setNome(nome);
-      usu.setLogin(login);
-      usu.setSenha(senha);
-      
-     
+      if(id!=null){
+          usu.setId(Integer.parseInt(id));
+      }
         try {
-        UsuarioDAO usuarioDAO = new UsuarioDAO();
-        usuarioDAO.salvar(usu);
-        } catch (SQLException e) {}  
-      resp.getWriter().print("Sucesso!");
-     
+            UsuarioDAO usuarioDAO = new UsuarioDAO();
+            usuarioDAO.excluir(usu);
+        } catch (SQLException e) {
+           
+        }
+      resp.getWriter().println("Excluido com sucesso");
+      resp.sendRedirect("usucontroller.do?acao=lis");
+      } else if(acao.equals("lis")){
+          
+          try {
+              UsuarioDAO usuarioDAO = new UsuarioDAO();
+              List<Usuario> lista = usuarioDAO.buscarTodos();
+              req.setAttribute("lista", lista);
+              RequestDispatcher dispatcher = req.getRequestDispatcher("WEB-INF/listausu.jsp");
+              dispatcher.forward(req,resp);
+          } catch (SQLException ex) {}
+          
+      } else if(acao.equals("alt")){
+          String id = req.getParameter("id");
+          
+          try {
+          UsuarioDAO  usuarioDAO = new UsuarioDAO();
+          Usuario usuario = usuarioDAO.buscarPorId(Integer.parseInt(id));
+          req.setAttribute("usu", usuario);
+          RequestDispatcher dispatcher = req.getRequestDispatcher("WEB-INF/formusuario.jsp");
+          dispatcher.forward(req, resp);
+          } catch (SQLException ex) {}
+          
+      }
     }
+    
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
       
+      String id = req.getParameter("id");
       String nome = req.getParameter("nome");
       String login = req.getParameter("login");
       String senha = req.getParameter("senha");
       
       Usuario usu = new Usuario();
+      if(id != null){
+        usu.setId(Integer.parseInt(id));
+      }
       usu.setNome(nome);
       usu.setLogin(login);
       usu.setSenha(senha);
-      
-     
+          
         try {
         UsuarioDAO usuarioDAO = new UsuarioDAO();
         usuarioDAO.salvar(usu);
