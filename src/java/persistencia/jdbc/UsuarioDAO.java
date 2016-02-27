@@ -71,7 +71,7 @@ public class UsuarioDAO {
      */
    
     public void salvar(Usuario usu) throws SQLException{
-        if(usu.getId()!= null){
+        if(usu.getId()== null){
             cadastrar(usu);
         }
         else{
