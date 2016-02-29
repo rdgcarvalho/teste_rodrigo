@@ -11,8 +11,11 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Formulário</title>
+               
     </head>
     <body>
+        <%@include file="menu.jsp" %>
+        
         <%
             Usuario u = (Usuario)request.getAttribute("usu");
         %>
@@ -23,6 +26,7 @@
             Senha:<input type="password" name="senha" value="<% out.print(u.getSenha());%>"/>
             
             <input type="submit" value="Salvar"/>
+            
         </form>
     </body>
 </html>

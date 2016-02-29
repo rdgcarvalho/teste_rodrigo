@@ -9,8 +9,6 @@ import entidade.Usuario;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -77,6 +75,18 @@ public class UsuarioController extends HttpServlet {
           dispatcher.forward(req, resp);
           } catch (SQLException ex) {}
           
+      } else if(acao.equals("cad")){
+          
+          Usuario usu = new Usuario();
+          usu.setId(0);
+          usu.setLogin("");
+          usu.setNome("");
+          usu.setSenha("");
+          req.setAttribute("usu", usu);
+          req.getRequestDispatcher("WEB-INF/formusuario.jsp").forward(req, resp);
+          
+          
+          
       }
     }
     
@@ -101,7 +111,9 @@ public class UsuarioController extends HttpServlet {
         UsuarioDAO usuarioDAO = new UsuarioDAO();
         usuarioDAO.salvar(usu);
         } catch (SQLException e) {}  
-      resp.getWriter().print("Sucesso!");    
+      resp.getWriter().print("Sucesso!");
+      resp.getWriter().println("Cadastrado");
+      resp.sendRedirect("usucontroller.do?acao=lis");
         
         
         

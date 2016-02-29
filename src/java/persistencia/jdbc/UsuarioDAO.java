@@ -46,11 +46,11 @@ public class UsuarioDAO {
     public void alterar(Usuario usu) throws SQLException{
         String sql = "update usuario set nome=?, login=?, senha=? where id=?";
         try(PreparedStatement preparador = con.prepareStatement(sql)){
-            preparador.setString(1, usu.getLogin());
-            preparador.setString(2, usu.getNome());
+            preparador.setString(1, usu.getNome());
+            preparador.setString(2, usu.getLogin());
             preparador.setString(3, usu.getSenha());
             preparador.setInt(4, usu.getId());
-            boolean x = preparador.execute();
+            preparador.execute();
             
         }catch(SQLException e){
         }
@@ -66,16 +66,16 @@ public class UsuarioDAO {
     
     /**
      *
-     * @param usu
+     * @param usuario     * 
      * @throws SQLException
      */
    
-    public void salvar(Usuario usu) throws SQLException{
-        if(usu.getId()== null){
-            cadastrar(usu);
+    public void salvar(Usuario usuario) throws SQLException{
+        if(usuario.getId() != null && usuario.getId() != 0){
+            alterar(usuario);
         }
         else{
-            alterar(usu);          
+            cadastrar(usuario);          
         }
     }
     public Usuario buscarPorId(Integer id) throws SQLException{
@@ -95,12 +95,10 @@ public class UsuarioDAO {
                
                return usuario;
             }
-                               
+            
             return null;
-        }catch(SQLException e){
-             
-        return null;
-    }
+            
+        }catch(SQLException e){    } return null;
 }
 public List<Usuario> buscarTodos() throws SQLException{
         
@@ -124,10 +122,10 @@ public List<Usuario> buscarTodos() throws SQLException{
                
             }
                                
-            
+            return lista;
         }catch(SQLException e){
              
-        return lista;
+        
     }
         
      return null;
